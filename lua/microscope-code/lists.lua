@@ -41,7 +41,6 @@ local function lsp_request_list(win, buf, action)
 
         local results = {}
         for _, value in pairs(items) do
-          vim.pretty_print(value)
           table.insert(
             results,
             string.format("%s:%s:%s: %s", relative_path(value.filename), value.lnum, value.col, value.text)
