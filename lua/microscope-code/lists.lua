@@ -1,3 +1,5 @@
+local highlight = require("microscope.highlight")
+local constants = require("microscope.constants")
 local lists = {}
 
 local function relative_path(filename)
@@ -6,9 +8,15 @@ end
 
 local function parser(data)
   local elements = vim.split(data.text, ":", {})
+  local highlights = highlight
+    .new(data.highlights, data.text)
+    :hl_match(constants.color.color1, "(.*:)(%d+:%d+:)(.*)", 1)
+    :hl_match(constants.color.color2, "(.*:)(%d+:%d+:)(.*)", 2)
+    :get_highlights()
 
   return {
     text = data.text,
+    highlights = highlights,
     file = elements[1],
     row = tonumber(elements[2]),
     col = tonumber(elements[3]),
