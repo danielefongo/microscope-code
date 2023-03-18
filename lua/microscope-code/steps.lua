@@ -1,6 +1,7 @@
-local highlight = require("microscope.highlight")
 local constants = require("microscope.constants")
-local lists = {}
+local error = require("microscope.error")
+local highlight = require("microscope.highlight")
+local steps = {}
 
 local function relative_path(filename)
   return string.gsub(filename, vim.fn.getcwd() .. "/", "")
@@ -31,7 +32,7 @@ local function lsp_request_list(win, buf, action)
 
       vim.lsp.buf_request(buf, action, params, function(err, result, ctx, _)
         if err then
-          vim.api.nvim_err_writeln(string.format("microscope-code: %s failed: %s", action, err.message))
+          error.generic(string.format("microscope-code: %s failed: %s", action, err.message))
           return
         end
 
@@ -62,20 +63,20 @@ local function lsp_request_list(win, buf, action)
   }
 end
 
-function lists.implementation(win, buf)
+function steps.implementation(win, buf)
   return lsp_request_list(win, buf, "textDocument/implementation")
 end
 
-function lists.references(win, buf)
+function steps.references(win, buf)
   return lsp_request_list(win, buf, "textDocument/references")
 end
 
-function lists.definition(win, buf)
+function steps.definition(win, buf)
   return lsp_request_list(win, buf, "textDocument/definition")
 end
 
-function lists.type_definition(win, buf)
+function steps.type_definition(win, buf)
   return lsp_request_list(win, buf, "textDocument/typeDefinition")
 end
 
-return lists
+return steps
