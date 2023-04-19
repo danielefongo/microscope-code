@@ -1,4 +1,4 @@
 return {
   finders = require("microscope-code.finders"),
-  steps = require("microscope-code.steps"),
+  lenses = require("microscope-code.lenses"),
 }

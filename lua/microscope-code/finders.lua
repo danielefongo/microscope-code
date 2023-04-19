@@ -1,34 +1,32 @@
 local files = require("microscope-files")
-local steps = require("microscope.steps")
-local code_steps = require("microscope-code.steps")
+local lenses = require("microscope.builtin.lenses")
+local code_lenses = require("microscope-code.lenses")
+local parsers = require("microscope.builtin.parsers")
+local files_parsers = require("microscope-files.parsers")
 
 return {
   code_implementations = {
+    lens = lenses.fzf(code_lenses.implementation()),
+    parsers = { files_parsers.file_row_col, parsers.fuzzy },
     open = files.open,
     preview = files.preview.cat,
-    chain = function(text, win, buf)
-      return { code_steps.implementation(win, buf), steps.fzf(text) }
-    end,
   },
   code_references = {
+    lens = lenses.fzf(code_lenses.references()),
+    parsers = { files_parsers.file_row_col, parsers.fuzzy },
     open = files.open,
     preview = files.preview.cat,
-    chain = function(text, win, buf)
-      return { code_steps.references(win, buf), steps.fzf(text) }
-    end,
   },
   code_definitions = {
+    lens = lenses.fzf(code_lenses.definition()),
+    parsers = { files_parsers.file_row_col, parsers.fuzzy },
     open = files.open,
     preview = files.preview.cat,
-    chain = function(text, win, buf)
-      return { code_steps.definition(win, buf), steps.fzf(text) }
-    end,
   },
   code_type_definition = {
+    lens = lenses.fzf(code_lenses.type_definition()),
+    parsers = { files_parsers.file_row_col, parsers.fuzzy },
     open = files.open,
     preview = files.preview.cat,
-    chain = function(text, win, buf)
-      return { code_steps.type_definition(win, buf), steps.fzf(text) }
-    end,
   },
 }
