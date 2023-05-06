@@ -18,7 +18,6 @@ local function lsp_request_list(action)
             ok = true
           end
         end
-        print(ok)
 
         if not ok then
           error.critical(string.format("microscope-code: %s not supported", action))
