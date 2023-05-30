@@ -29,4 +29,16 @@ return {
     open = files.open,
     preview = files.preview.cat,
   },
+  code_workspace_symbols = {
+    lens = lenses.head(100, lenses.fzf(lenses.cache(code_lenses.workspace_symbols()))),
+    parsers = { files_parsers.file_row_col, parsers.fuzzy },
+    open = files.open,
+    preview = files.preview.cat,
+  },
+  code_buffer_symbols = {
+    lens = lenses.head(100, lenses.fzf(lenses.cache(code_lenses.buffer_symbols()))),
+    parsers = { files_parsers.row_col, parsers.fuzzy },
+    open = files.open,
+    preview = files.preview.cat,
+  },
 }
