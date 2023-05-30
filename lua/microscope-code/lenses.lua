@@ -99,7 +99,13 @@ function lenses.workspace_symbols()
       local items = vim.lsp.util.symbols_to_items(elements, request.buf)
 
       return vim.tbl_map(function(item)
-        return string.format("%s:%s:%s: %s", relative_path(item.filename), item.lnum, item.col, item.text)
+        return string.format(
+          "%s:%s:%s: %s",
+          relative_path(item.filename),
+          item.lnum,
+          item.col,
+          item.text:gsub("\n", " ")
+        )
       end, items)
     end,
   })
