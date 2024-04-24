@@ -13,43 +13,41 @@ local function lsp_request(opts)
 
   return {
     fun = function(flow, request)
-      flow.cmd
-        .await(function(callback)
-          local params = param_builder(request)
+      flow.consume(flow.cmd.await(function(callback)
+        local params = param_builder(request)
 
-          local ok = false
-          for _, client in pairs(vim.lsp.get_active_clients()) do
-            if client.supports_method(action) then
-              ok = true
-            end
+        local ok = false
+        for _, client in pairs(vim.lsp.get_active_clients()) do
+          if client.supports_method(action) then
+            ok = true
           end
+        end
 
-          if not ok then
-            error.critical(string.format("microscope-code: %s not supported", action))
+        if not ok then
+          error.critical(string.format("microscope-code: %s not supported", action))
+          return callback()
+        end
+
+        vim.lsp.buf_request(request.buf, action, params, function(err, result, ctx, _)
+          if err then
+            error.critical(string.format("microscope-code: %s failed: %s", action, err.message))
             return callback()
           end
 
-          vim.lsp.buf_request(request.buf, action, params, function(err, result, ctx, _)
-            if err then
-              error.critical(string.format("microscope-code: %s failed: %s", action, err.message))
-              return callback()
+          local elements = {}
+          if result then
+            if not vim.tbl_islist(result) then
+              elements = { result }
+            else
+              elements = result
             end
+          end
 
-            local elements = {}
-            if result then
-              if not vim.tbl_islist(result) then
-                elements = { result }
-              else
-                elements = result
-              end
-            end
+          local results = format_elements(request, elements, ctx)
 
-            local results = format_elements(request, elements, ctx)
-
-            callback(results)
-          end)
+          callback(results)
         end)
-        :into(flow)
+      end))
     end,
   }
 end
