@@ -17,8 +17,8 @@ local function lsp_request(opts)
         local params = param_builder(request)
 
         local ok = false
-        for _, client in pairs(vim.lsp.get_active_clients()) do
-          if client.supports_method(action) then
+        for _, client in pairs(vim.lsp.get_clients()) do
+          if client:supports_method(action) then
             ok = true
           end
         end
@@ -36,7 +36,7 @@ local function lsp_request(opts)
 
           local elements = {}
           if result then
-            if not vim.tbl_islist(result) then
+            if not vim.islist(result) then
               elements = { result }
             else
               elements = result
